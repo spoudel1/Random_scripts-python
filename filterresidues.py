@@ -1,4 +1,4 @@
-#this script will extract sequences with specific residues
+#this script will extract sequences with specific residues given a file containing list of positions
 #input: residue position file and clustal file
 #output: aligned sequences with specific residues
 
