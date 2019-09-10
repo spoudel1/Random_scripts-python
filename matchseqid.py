@@ -9,7 +9,7 @@ _store2={}
 
 with open(sys.argv[1],'r') as file1:
     for t1 in file1:
-        t1_split=t1.split('\t')
+        t1_split=t1.split(',')
         _store1[t1_split[0][:t1_split[0].index('.')].strip()]=t1_split[1].strip()
         _store2[t1_split[2][:t1_split[2].index('.')].strip()]=t1_split[3].strip()
 
