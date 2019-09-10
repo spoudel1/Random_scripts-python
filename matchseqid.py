@@ -21,6 +21,7 @@ with open(sys.argv[1],'r') as file1:
 for key,value in _store1.items():
     for tkey,tvalue in _store2.items():
         if tvalue in value:
-            if tkey[:-5]==key[:-5] and int(tkey[-5:])+10<int(key[-5:]) or int(tkey[-5:])-10<int(key[-5:]):
-                outputfile.write(key+'\t'+tkey+'\t'+value+'\n')
+            if tkey[:-5]==key[:-5]:
+                if (int(tkey[-5:])+10)>(int(key[-5:])) and (int(tkey[-5:])-10)<(int(key[-5:])):
+                    outputfile.write(key+'\t'+tkey+'\t'+value+'\n')
 
