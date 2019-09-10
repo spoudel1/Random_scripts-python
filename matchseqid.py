@@ -3,7 +3,7 @@
 #output: file that contains both sequence ids
 
 import sys
-outputfile=open(sys.argv[1],'w')
+outputfile=open(sys.argv[2],'w')
 _store1={}
 _store2={}
 
