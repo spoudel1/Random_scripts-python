@@ -3,15 +3,15 @@
 #output: file that contains both sequence ids
 
 import sys
-outputfile=open(sys.argv[3],'w')
+outputfile=open(sys.argv[1],'w')
 _store1={}
 _store2={}
 
 with open(sys.argv[1],'r') as file1:
     for t1 in file1:
         t1_split=t1.split('\t')
-        _store1[t1_split[0].strip()]=t1_split[1].strip()
-        _store2[t1_split[2].strip()]=t1_split[3].strip()
+        _store1[t1_split[0][:t1_split[0].index('.')].strip()]=t1_split[1].strip()
+        _store2[t1_split[2][:t1_split[2].index('.')].strip()]=t1_split[3].strip()
 
 #with open(sys.argv[2],'r') as file2:
 #    for t2 in file2:
