@@ -1,4 +1,7 @@
 #this program will extract all the genomes that contains user specified phylum from ncbi - database based on 05/05/2020 
+#python extractgenomes_fromncbi.py assembly_summary_refseq_completegenomesonly_filtered.txt fullnamelineage.dmp
+#Here, the code takes two files: 1) summary file that contains all the complete genome ftp and 2) file that contains taxonomic information (i.e., Firmicutes etc)
+#This code will create three main things: 1) directory called "Firmicutesonly" - this will contain all the complete genomes, 2) "Firmicutes_flanking_gene.txt" - this will contain all the protein id of all the extracted genome and 3) "Taxonomy_firmicutes.txt" - this will contain the entire lineage information (e.g., family, order, class etc.)
 #input: assembly summary refseq file and fullname lineage.dmp taxonomy file
 #output: All genomes, tabulated sequence id, file with flanking genes
 
