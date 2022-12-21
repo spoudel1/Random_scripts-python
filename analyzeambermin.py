@@ -38,6 +38,7 @@ def main(argv):
     parser.add_argument("-fn", "--topcombo", type=int, help="specify the total number of most frequent combinations you want to print", default=50, action='store')
     parser.add_argument("-c", "--combination", action='store_true')
     parser.add_argument("-tl", "--toplist", action='store_true')
+    parser.add_argument("-o", "--outputfile", type=str, help="outputfile", required=True,action='store')
 
     args = parser.parse_args()
     topcombo = args.topcombo
@@ -46,10 +47,11 @@ def main(argv):
         threshold=float(args.threshold)
     else:
         threshold=float(df[df[1] == 'WT'][6].iloc[0])
+    outputfile=open(args.outputfile,'w')
     # Load the dataset
     if not args.combination:
     #    df = pd.read_csv(args.datafile,sep=",", skipinitialspace =True, header=None)
-        outputfile=open(args.datafile[:args.datafile.index('.')]+'_sorted.csv','w')
+#        outputfile=open(args.datafile[:args.datafile.index('.')]+'_sorted.csv','w')
         df_data=df.iloc[:, 3:5] #make sure third, fourth and fifth column is complex energy, binder energy and peptide energy
         # Calculate the interquartile range (IQR)
         Q1 = df_data.quantile(0.25)
