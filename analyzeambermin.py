@@ -35,18 +35,20 @@ def main(argv):
     parser.add_argument("-n", "--totalcan", type=str, help="total number of candidates user wants", required=False, action='store')
     parser.add_argument("-tv", "--threshold", type=str, help="specify the threshold value to filter the data", required=False, action='store')
     parser.add_argument("-cn", "--combo_length", type=str, help="specify the length of combinations you want for frequency calculation", required=False,action='store')
-    parser.add_argument("-fn", "--topcombo", type=str, help="specify the total number of most frequent combinations you want to print", required=False, action='store')
+    parser.add_argument("-fn", "--topcombo", type=int, help="specify the total number of most frequent combinations you want to print", default=50, action='store')
     parser.add_argument("-c", "--combination", action='store_true')
     parser.add_argument("-tl", "--toplist", action='store_true')
 
     args = parser.parse_args()
-    if args.topcombo:
-        topcombo=int(args.topcombo)
+    topcombo = args.topcombo
+    df = pd.read_csv(args.datafile,sep=",", skipinitialspace =True, header=None)
+    if args.threshold:
+        threshold=float(args.threshold)
     else:
-        topcombo=50
+        threshold=float(df[df[1] == 'WT'][6].iloc[0])
     # Load the dataset
     if not args.combination:
-        df = pd.read_csv(args.datafile,sep=",", skipinitialspace =True, header=None)
+    #    df = pd.read_csv(args.datafile,sep=",", skipinitialspace =True, header=None)
         outputfile=open(args.datafile[:args.datafile.index('.')]+'_sorted.csv','w')
         df_data=df.iloc[:, 3:5] #make sure third, fourth and fifth column is complex energy, binder energy and peptide energy
         # Calculate the interquartile range (IQR)
@@ -64,13 +66,14 @@ def main(argv):
 
         #print the data to file_sorted.csv file
         outputfile.write('Sorted list: '+'\n')
+        outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
         df2.to_csv(outputfile,index=False, header=False)
         
         #selecting user specified number of candidates based on the threshold 
         if args.toplist:
             df4=[]
             totalcandidates=int(args.totalcan)
-            threshold=float(args.threshold)
+    #        threshold=float(args.threshold)
             df3=df2.to_numpy()
             for x in range(0, len(df3)):
                 if df3[x][6]< threshold:
@@ -80,7 +83,8 @@ def main(argv):
                 listfile=open(args.toplistfile, 'w')
                 finaldf.to_csv(listfile,index=False, header=False)
             else:
-                outputfile.write('\n\n\n\n'+"Top "+str(totalcandidates)+" candidates"+'\n')
+                outputfile.write('\n\n\n\n'+"Top "+str(totalcandidates)+"or maximum possible candidates"+'\n')
+                outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
                 finaldf.to_csv(outputfile, mode="a", index=False, header=False)
         #print the result
         df_select=[list(df.iloc[:, 1][x].split('_')) for x in range(0, len(df.iloc[:, 1]))]
@@ -91,7 +95,7 @@ def main(argv):
     #  print(most_frequent_combination)  # Output: [3, 4]
     elif args.combination:
         combo_length=int(args.combo_length)
-        df = pd.read_csv(args.datafile,sep=",", skipinitialspace =True, header=None)
+     #   df = pd.read_csv(args.datafile,sep=",", skipinitialspace =True, header=None)
         df_select=[list(df.iloc[:, 1][x].split('_')) for x in range(0, len(df.iloc[:, 1]))]
         most_frequent_combination = get_most_frequent_combination(combo_length,df_select, topcombo)
 #        print(combo_length)
