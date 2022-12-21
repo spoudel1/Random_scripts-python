@@ -85,15 +85,17 @@ def main(argv):
                 listfile=open(args.toplistfile, 'w')
                 finaldf.to_csv(listfile,index=False, header=False)
             else:
-                outputfile.write('\n\n\n\n'+"Top "+str(totalcandidates)+"or maximum possible candidates"+'\n')
+                outputfile.write('\n\n\n\n'+"Top "+str(totalcandidates)+" or maximum possible candidates"+'\n')
                 outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
                 finaldf.to_csv(outputfile, mode="a", index=False, header=False)
-        #print the result
-        df_select=[list(df.iloc[:, 1][x].split('_')) for x in range(0, len(df.iloc[:, 1]))]
-        outputfile.write('\n\n\n\n'+"Most "+str(topcombo)+" frequnent combination(s)"+'\n')
-        for i in range(1,5):
-            most_frequent_combination = get_most_frequent_combination(i,df_select, topcombo)
-            pd.DataFrame(most_frequent_combination).to_csv(outputfile, mode="a", index=False, header=False)
+
+            #print the result
+         #   df_select=[list(df.iloc[:, 1][x].split('_')) for x in range(0, len(df.iloc[:, 1]))]
+            df_select=[list(finaldf.iloc[:, 1][x].split('_')) for x in range(0, len(finaldf.iloc[:, 1]))]
+            outputfile.write('\n\n\n\n'+"Most "+str(topcombo)+" frequnent combination(s)"+'\n')
+            for i in range(1,5):
+                most_frequent_combination = get_most_frequent_combination(i,df_select, topcombo)
+                pd.DataFrame(most_frequent_combination).to_csv(outputfile, mode="a", index=False, header=False)
     #  print(most_frequent_combination)  # Output: [3, 4]
     elif args.combination:
         combo_length=int(args.combo_length)
