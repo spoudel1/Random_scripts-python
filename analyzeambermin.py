@@ -31,12 +31,13 @@ def main(argv):
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--datafile", type=str, help="mmpbsa datafile to sort", required=True, action='store')
-    parser.add_argument("-l", "--toplist", type=str, help="file containing the top n candidates", required=False, action='store')
+    parser.add_argument("-l", "--toplistfile", type=str, help="file containing the top n candidates", required=False, action='store')
     parser.add_argument("-n", "--totalcan", type=str, help="total number of candidates user wants", required=False, action='store')
     parser.add_argument("-tv", "--threshold", type=str, help="specify the threshold value to filter the data", required=False, action='store')
     parser.add_argument("-cn", "--combo_length", type=str, help="specify the length of combinations you want for frequency calculation", required=False,action='store')
     parser.add_argument("-fn", "--topcombo", type=str, help="specify the total number of most frequent combinations you want to print", required=False, action='store')
     parser.add_argument("-c", "--combination", action='store_true')
+    parser.add_argument("-tl", "--toplist", action='store_true')
 
     args = parser.parse_args()
     if args.topcombo:
@@ -62,12 +63,12 @@ def main(argv):
         df2=(df.loc[df1.index]).sort_values(by=df.columns[6])
 
         #print the data to file_sorted.csv file
+        outputfile.write('Sorted list: '+'\n')
         df2.to_csv(outputfile,index=False, header=False)
         
         #selecting user specified number of candidates based on the threshold 
         if args.toplist:
             df4=[]
-            listfile=open(args.toplist, 'w')
             totalcandidates=int(args.totalcan)
             threshold=float(args.threshold)
             df3=df2.to_numpy()
@@ -75,7 +76,12 @@ def main(argv):
                 if df3[x][6]< threshold:
                     df4.append(df3[x])
             finaldf=(pd.DataFrame(df4)).head(totalcandidates)
-            finaldf.to_csv(listfile,index=False, header=False)
+            if args.toplistfile:
+                listfile=open(args.toplistfile, 'w')
+                finaldf.to_csv(listfile,index=False, header=False)
+            else:
+                outputfile.write('\n\n\n\n'+"Top "+str(totalcandidates)+" candidates"+'\n')
+                finaldf.to_csv(outputfile, mode="a", index=False, header=False)
         #print the result
         df_select=[list(df.iloc[:, 1][x].split('_')) for x in range(0, len(df.iloc[:, 1]))]
         outputfile.write('\n\n\n\n'+"Most "+str(topcombo)+" frequnent combination(s)"+'\n')
