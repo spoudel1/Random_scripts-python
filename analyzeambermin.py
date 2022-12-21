@@ -7,20 +7,22 @@ import sys
 import pandas as pd
 import argparse
 from collections import Counter
+import itertools
 #be_index=int(sys.argv[2]) #index for complex energy. count from 0
 #ce_index=int(sys.argv[3]) #index for binding energy. count from 0
 
 def get_most_frequent_combination(combination_length, lists, number):
   # Flatten the list of lists into a single list
-  flat_list = [item for sublist in lists for item in sublist]
-
+  flat_list = list(set([item for sublist in lists for item in sublist]))
+  
   # Get all combinations of the specified length from the flattened list
   combinations = [tuple(flat_list[i:i+combination_length]) for i in range(len(flat_list)-combination_length+1)]
-
+  
   # Count the frequency of each combination
   combination_counts = Counter(combinations)
   for k in combination_counts:
       combination_counts[k]=round(((combination_counts[k]/float(len(lists)))*100),2)
+
 #  print(combination_counts.most_common((number)))
   # Return the most frequent combination
   return combination_counts.most_common(number)
