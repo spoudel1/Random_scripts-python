@@ -8,18 +8,27 @@ import pandas as pd
 import argparse
 from collections import Counter
 import itertools
+
 #be_index=int(sys.argv[2]) #index for complex energy. count from 0
 #ce_index=int(sys.argv[3]) #index for binding energy. count from 0
 
 def get_most_frequent_combination(combination_length, lists, number):
-  # Flatten the list of lists into a single list
-  flat_list = list(set([item for sublist in lists for item in sublist]))
-  
-  # Get all combinations of the specified length from the flattened list
-  combinations = [tuple(flat_list[i:i+combination_length]) for i in range(len(flat_list)-combination_length+1)]
+
+  #Get all the combinations of specified length 
+#  temp=[]
+#  for item in lists:
+#      temp.extend(tuple(k) for k in itertools.combinations(item,combination_length))
+  temp=[tuple(k) for item in lists for k in itertools.combinations(item,combination_length)]
+
+  #Count the frequency of each combination
+  combination_counts= Counter(temp)
+ 
+ # Get all combinations of the specified length from the flattened list
+#  combinations = [tuple(flat_list[i:i+combination_length]) for i in range(len(flat_list)-combination_length+1)]
   
   # Count the frequency of each combination
-  combination_counts = Counter(combinations)
+#  combination_counts = Counter(combinations)
+#  print(combination_counts)
   for k in combination_counts:
       combination_counts[k]=round(((combination_counts[k]/float(len(lists)))*100),2)
 
@@ -69,9 +78,9 @@ def main(argv):
         df2=(df.loc[df1.index]).sort_values(by=df.columns[6])
 
         #print the data to file_sorted.csv file
-        outputfile.write('Sorted list: '+'\n')
-        outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
-        df2.to_csv(outputfile,index=False, header=False)
+#        outputfile.write('Sorted list: '+'\n')
+#        outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
+#        df2.to_csv(outputfile,index=False, header=False)
         
         #selecting user specified number of candidates based on the threshold 
         if args.toplist:
@@ -87,9 +96,14 @@ def main(argv):
                 listfile=open(args.toplistfile, 'w')
                 finaldf.to_csv(listfile,index=False, header=False)
             else:
-                outputfile.write('\n\n\n\n'+"Top "+str(totalcandidates)+" or maximum possible candidates"+'\n')
+                outputfile.write("Top "+str(totalcandidates)+" or maximum possible candidates"+'\n')
                 outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
                 finaldf.to_csv(outputfile, mode="a", index=False, header=False)
+
+            #print the data to file_sorted.csv file
+            outputfile.write('\n\n\n\n'+'Sorted complete list: '+'\n')
+            outputfile.write('binder,mutations,peptide,complexEnergy,binderEnergy,peptideEnergy,bindingEnergy'+'\n')
+            df2.to_csv(outputfile,index=False, header=False)
 
             #print the result
          #   df_select=[list(df.iloc[:, 1][x].split('_')) for x in range(0, len(df.iloc[:, 1]))]
@@ -97,10 +111,13 @@ def main(argv):
                 outputfile.write("There are no candidates better than WT"+'\n')
             else:
                 df_select=[list(finaldf.iloc[:, 1][x].split('_')) for x in range(0, len(finaldf.iloc[:, 1]))]
+                maxList = len(max(df_select, key = lambda i: len(i)))
                 outputfile.write('\n\n\n\n'+"Most "+str(topcombo)+" frequnent combination(s)"+'\n')
-                for i in range(1,5):
+                outputfile.write('Clones,percent'+'\n')
+                for i in range(1,maxList+1):
                     most_frequent_combination = get_most_frequent_combination(i,df_select, topcombo)
                     pd.DataFrame(most_frequent_combination).to_csv(outputfile, mode="a", index=False, header=False)
+
     #  print(most_frequent_combination)  # Output: [3, 4]
     elif args.combination:
         combo_length=int(args.combo_length)
