@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import subprocess
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
 _store=[]
 with open (sys.argv[1],'r') as inputfile:
@@ -31,6 +32,13 @@ for index, row in dflast.iterrows():
     tempx=(pd.Series(range(0, len(_store)))).values.reshape(len(_store), 1)
     model=LinearRegression().fit(tempx,temp)
     r_sq=model.score(tempx,temp)
+   
+    # x and y are the arrays containing the data used in the linear regression
+#    plt.scatter(tempx, temp, color='blue', alpha=0.5)  # create the scatter plot
+    # Add the regression line to the plot
+#    plt.plot(tempx, model.predict(tempx), color='red', linewidth=2)
+#    print(f"Regression equation: y = {model.coef_[0]:.2f}x + {model.intercept_:.2f}")
+#    plt.show()
     if tcount==0:
         dflast.insert(len(_store)+2, "r square value", r_sq)
         dflast.insert(len(_store)+3, "slope",model.coef_[0][0])
